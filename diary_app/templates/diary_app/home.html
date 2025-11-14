@@ -1,0 +1,88 @@
+{% extends 'diary_app/base.html' %}
+
+{% block title %}MeMind - Личный дневник{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center py-12">
+    <div class="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center px-4">
+        <!-- Левая часть - Приветствие -->
+        <div class="text-left">
+            <h1 class="text-6xl md:text-7xl font-bold mb-4 outlined-text" style="-webkit-text-stroke: 3px black; color: white; line-height: 1.2;">
+                HELLO!
+            </h1>
+            <h2 class="text-5xl md:text-6xl font-bold mb-2 outlined-text" style="-webkit-text-stroke: 3px black; color: white;">
+                ITS YOUR
+            </h2>
+            <h2 class="text-5xl md:text-6xl font-bold mb-2 outlined-text" style="-webkit-text-stroke: 3px black; color: white;">
+                PERSON
+            </h2>
+            <h2 class="text-5xl md:text-6xl font-bold mb-4 outlined-text" style="-webkit-text-stroke: 3px black; color: white;">
+                DAIRY
+            </h2>
+            <div class="wavy-line w-32 mb-6"></div>
+            <p class="text-2xl md:text-3xl text-white font-semibold">
+                LETS WRITE
+            </p>
+        </div>
+
+        <!-- Правая часть - Кнопки -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Войти -->
+            <div class="relative">
+                <div class="absolute -left-8 top-1/2 transform -translate-y-1/2 text-4xl">☀️</div>
+                <a href="{% url 'login' %}" class="pink-button block px-6 py-4 text-center text-lg font-bold text-black">
+                    ВОЙТИ
+                </a>
+            </div>
+
+            <!-- Регистрация -->
+            <div class="relative">
+                <div class="absolute -left-8 top-1/2 transform -translate-y-1/2 text-4xl">☁️</div>
+                <div class="absolute -right-8 top-1/2 transform -translate-y-1/2 text-3xl">⭐</div>
+                <a href="{% url 'register' %}" class="pink-button block px-6 py-4 text-center text-lg font-bold text-black">
+                    РЕГИСТРАЦИЯ
+                </a>
+            </div>
+
+            <!-- Зачем нужен дневник? -->
+            <div class="relative">
+                <div class="absolute -left-8 top-1/2 transform -translate-y-1/2 text-4xl">🌼</div>
+                <div class="absolute -right-8 top-1/2 transform -translate-y-1/2 text-3xl">🌸</div>
+                <a href="{% url 'why_diary' %}" class="pink-button block px-6 py-4 text-center text-lg font-bold text-black">
+                    ЗАЧЕМ НУЖЕН<br>ДНЕВНИК?
+                </a>
+            </div>
+
+            <!-- Советы -->
+            <div class="relative">
+                <div class="absolute -right-8 top-1/2 transform -translate-y-1/2 text-4xl">🌈</div>
+                <a href="{% url 'tips' %}" class="pink-button block px-6 py-4 text-center text-lg font-bold text-black">
+                    СОВЕТЫ
+                </a>
+            </div>
+
+            <!-- О приложении -->
+            <div class="relative">
+                <div class="absolute -left-8 top-1/2 transform -translate-y-1/2 text-4xl">🌈</div>
+                <a href="{% url 'about' %}" class="pink-button block px-6 py-4 text-center text-lg font-bold text-black">
+                    О ПРИЛОЖЕНИИ
+                </a>
+            </div>
+
+            <!-- Дорожная карта -->
+            <div class="relative">
+                <div class="absolute -left-8 top-1/2 transform -translate-y-1/2 text-4xl">📦</div>
+                <div class="absolute -right-8 top-1/2 transform -translate-y-1/2 flex gap-2">
+                    <span class="text-2xl">🔷</span>
+                    <span class="text-2xl">🔶</span>
+                    <span class="text-2xl">⭐</span>
+                </div>
+                <a href="{% url 'roadmap' %}" class="pink-button block px-6 py-4 text-center text-lg font-bold text-black">
+                    ДОРОЖНАЯ КАРТА
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,110 @@
+{% extends 'diary_app/base.html' %}
+
+{% block title %}Профиль - MeMind{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <h1 class="text-5xl font-bold mb-6 outlined-text" style="-webkit-text-stroke: 3px black; color: white;">
+        МОЙ ПРОФИЛЬ
+    </h1>
+    <div class="wavy-line w-48 mb-8"></div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Информация о пользователе -->
+        <div class="card">
+            <div class="text-center mb-6">
+                {% if profile.avatar %}
+                <img src="{{ profile.avatar.url }}" alt="Аватар" 
+                     class="w-32 h-32 rounded-full border-4 border-black mx-auto mb-4 object-cover">
+                {% else %}
+                <div class="w-32 h-32 rounded-full border-4 border-black mx-auto mb-4 bg-pink-200 flex items-center justify-center text-5xl">
+                    👤
+                </div>
+                {% endif %}
+                <h2 class="text-3xl font-bold text-black mb-2">{{ user.username }}</h2>
+                <p class="text-gray-600">{{ user.email }}</p>
+            </div>
+            
+            {% if profile.bio %}
+            <div class="mb-4">
+                <h3 class="font-bold text-black mb-2">О себе:</h3>
+                <p class="text-gray-800">{{ profile.bio }}</p>
+            </div>
+            {% endif %}
+            
+            {% if profile.birth_date %}
+            <div class="mb-4">
+                <p class="text-gray-600">Дата рождения: {{ profile.birth_date|date:"d.m.Y" }}</p>
+            </div>
+            {% endif %}
+            
+            <p class="text-gray-600 mb-4">Регистрация: {{ profile.created_at|date:"d.m.Y" }}</p>
+            
+            <a href="{% url 'profile_edit' %}" class="block w-full pink-button py-3 text-center text-lg font-bold text-black">
+                ✏️ РЕДАКТИРОВАТЬ ПРОФИЛЬ
+            </a>
+        </div>
+        
+        <!-- Статистика -->
+        <div class="card">
+            <h3 class="text-2xl font-bold text-black mb-4">📊 СТАТИСТИКА</h3>
+            <div class="space-y-4">
+                <div class="border-2 border-black rounded-lg p-4">
+                    <p class="text-3xl font-bold text-black">{{ total_entries }}</p>
+                    <p class="text-gray-700">Всего записей</p>
+                </div>
+                <div class="border-2 border-black rounded-lg p-4">
+                    <p class="text-3xl font-bold text-black">{{ favorite_count }}</p>
+                    <p class="text-gray-700">Избранных записей</p>
+                </div>
+            </div>
+            
+            <h4 class="text-xl font-bold text-black mt-6 mb-4">Записи по месяцам:</h4>
+            <div class="space-y-2">
+                {% for stat in months_stats %}
+                <div class="flex justify-between items-center border-b border-gray-300 pb-2">
+                    <span class="text-gray-700">{{ stat.month }}</span>
+                    <span class="font-bold text-black">{{ stat.count }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Последние записи -->
+        <div class="card">
+            <h3 class="text-2xl font-bold text-black mb-4">📝 ПОСЛЕДНИЕ ЗАПИСИ</h3>
+            {% if entries %}
+            <div class="space-y-3">
+                {% for entry in entries %}
+                <a href="{% url 'entry_detail' entry.pk %}" 
+                   class="block p-3 border-2 border-black rounded-lg hover:bg-pink-100 transition-colors">
+                    <p class="font-semibold text-black mb-1">
+                        {% if entry.title %}
+                            {{ entry.title|truncatewords:5 }}
+                        {% else %}
+                            Запись от {{ entry.created_at|date:"d.m.Y" }}
+                        {% endif %}
+                        {% if entry.is_favorite %}
+                            <span class="text-yellow-500">⭐</span>
+                        {% endif %}
+                    </p>
+                    <p class="text-sm text-gray-600">{{ entry.created_at|date:"d.m.Y" }}</p>
+                </a>
+                {% endfor %}
+            </div>
+            <div class="mt-4">
+                <a href="{% url 'diary' %}" class="block w-full pink-button py-2 text-center font-bold text-black">
+                    Все записи →
+                </a>
+            </div>
+            {% else %}
+            <p class="text-gray-600 text-center py-8">Пока нет записей</p>
+            <a href="{% url 'entry_create' %}" class="block w-full pink-button py-3 text-center font-bold text-black">
+                Создать первую запись
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

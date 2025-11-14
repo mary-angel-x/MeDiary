@@ -1,0 +1,69 @@
+{% extends 'diary_app/base.html' %}
+
+{% block title %}Регистрация - MeMind{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center py-12">
+    <div class="w-full max-w-md">
+        <div class="card">
+            <h1 class="text-4xl font-bold text-center mb-8 outlined-text" style="-webkit-text-stroke: 2px black; color: #87CEEB;">
+                РЕГИСТРАЦИЯ
+            </h1>
+            
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                
+                <div>
+                    <label class="block text-black font-semibold mb-2">{{ form.username.label }}</label>
+                    {{ form.username }}
+                    {% if form.username.errors %}
+                        <p class="text-red-600 text-sm mt-1">{{ form.username.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                
+                <div>
+                    <label class="block text-black font-semibold mb-2">{{ form.email.label }}</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                        <p class="text-red-600 text-sm mt-1">{{ form.email.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                
+                <div>
+                    <label class="block text-black font-semibold mb-2">{{ form.password1.label }}</label>
+                    {{ form.password1 }}
+                    {% if form.password1.errors %}
+                        <p class="text-red-600 text-sm mt-1">{{ form.password1.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                
+                <div>
+                    <label class="block text-black font-semibold mb-2">{{ form.password2.label }}</label>
+                    {{ form.password2 }}
+                    {% if form.password2.errors %}
+                        <p class="text-red-600 text-sm mt-1">{{ form.password2.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                
+                <button type="submit" class="w-full pink-button py-3 text-xl font-bold text-black">
+                    ЗАРЕГИСТРИРОВАТЬСЯ
+                </button>
+            </form>
+            
+            <div class="mt-6 text-center">
+                <p class="text-black mb-2">Уже есть аккаунт?</p>
+                <a href="{% url 'login' %}" class="text-blue-600 font-semibold hover:underline">
+                    Войти
+                </a>
+            </div>
+            
+            <div class="mt-4 text-center">
+                <a href="{% url 'home' %}" class="text-black font-semibold hover:underline">
+                    ← На главную
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

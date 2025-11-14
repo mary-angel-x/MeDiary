@@ -1,0 +1,41 @@
+{% extends 'diary_app/base.html' %}
+
+{% block title %}Удалить запись - MeMind{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="card">
+        <h1 class="text-4xl font-bold mb-6 outlined-text text-center" style="-webkit-text-stroke: 2px black; color: #87CEEB;">
+            УДАЛИТЬ ЗАПИСЬ?
+        </h1>
+        
+        <div class="mb-6 p-4 bg-gray-100 border-2 border-black rounded-lg">
+            <p class="text-lg font-semibold mb-2">
+                {% if entry.title %}
+                    {{ entry.title }}
+                {% else %}
+                    Запись от {{ entry.created_at|date:"d.m.Y" }}
+                {% endif %}
+            </p>
+            <p class="text-gray-600">{{ entry.created_at|date:"d.m.Y в H:i" }}</p>
+            <p class="text-gray-800 mt-2 line-clamp-3">{{ entry.content|truncatewords:20 }}</p>
+        </div>
+        
+        <p class="text-center text-lg font-semibold mb-6 text-red-600">
+            Вы уверены? Это действие нельзя отменить.
+        </p>
+        
+        <form method="post" class="flex gap-4">
+            {% csrf_token %}
+            <button type="submit" class="flex-1 pink-button py-3 text-xl font-bold text-black bg-red-200 hover:bg-red-300">
+                🗑️ ДА, УДАЛИТЬ
+            </button>
+            <a href="{% url 'entry_detail' entry.pk %}" 
+               class="flex-1 pink-button py-3 text-xl font-bold text-black text-center">
+                ❌ ОТМЕНА
+            </a>
+        </form>
+    </div>
+</div>
+{% endblock %}
+

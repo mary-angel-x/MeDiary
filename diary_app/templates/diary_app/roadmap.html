@@ -1,0 +1,61 @@
+{% extends 'diary_app/base.html' %}
+
+{% block title %}Дорожная карта - MeMind{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="card">
+        <h1 class="text-5xl font-bold mb-6 outlined-text text-center" style="-webkit-text-stroke: 3px black; color: #87CEEB;">
+            ДОРОЖНАЯ КАРТА
+        </h1>
+        <div class="wavy-line w-48 mx-auto mb-8"></div>
+        
+        <div class="space-y-6">
+            <div class="border-2 border-black rounded-lg p-6">
+                <h2 class="text-2xl font-bold text-black mb-3">✅ Реализовано</h2>
+                <ul class="list-disc list-inside space-y-2 text-gray-800">
+                    <li>Регистрация и авторизация пользователей</li>
+                    <li>Создание, редактирование и удаление записей</li>
+                    <li>Система настроений</li>
+                    <li>Теги для записей</li>
+                    <li>Избранные записи</li>
+                    <li>Поиск и фильтрация</li>
+                    <li>Профиль пользователя</li>
+                    <li>Статистика записей</li>
+                </ul>
+            </div>
+            
+            <div class="border-2 border-black rounded-lg p-6">
+                <h2 class="text-2xl font-bold text-black mb-3">🚀 В разработке</h2>
+                <ul class="list-disc list-inside space-y-2 text-gray-800">
+                    <li>Экспорт записей в PDF</li>
+                    <li>Темная тема</li>
+                    <li>Мобильное приложение</li>
+                    <li>Напоминания о записях</li>
+                </ul>
+            </div>
+            
+            <div class="border-2 border-black rounded-lg p-6">
+                <h2 class="text-2xl font-bold text-black mb-3">💡 Планируется</h2>
+                <ul class="list-disc list-inside space-y-2 text-gray-800">
+                    <li>Графики настроения</li>
+                    <li>Цели и задачи</li>
+                    <li>Привычки и трекеры</li>
+                    <li>Синхронизация между устройствами</li>
+                    <li>Резервное копирование в облако</li>
+                    <li>Шифрование записей</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="mt-8 text-center">
+            <p class="text-gray-700 mb-4">У вас есть идеи для улучшения? Мы будем рады их услышать!</p>
+            <a href="{% if user.is_authenticated %}{% url 'diary' %}{% else %}{% url 'home' %}{% endif %}" 
+               class="pink-button inline-block px-8 py-4 text-xl font-bold text-black">
+                {% if user.is_authenticated %}Вернуться в дневник{% else %}На главную{% endif %}
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

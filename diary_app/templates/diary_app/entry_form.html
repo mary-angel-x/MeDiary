@@ -1,0 +1,89 @@
+{% extends 'diary_app/base.html' %}
+
+{% block title %}{{ action }} запись - MeMind{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="card">
+        <h1 class="text-4xl font-bold mb-6 outlined-text text-center" style="-webkit-text-stroke: 2px black; color: #87CEEB;">
+            {{ action }} ЗАПИСЬ
+        </h1>
+        
+        <form method="post" enctype="multipart/form-data" class="space-y-6">
+            {% csrf_token %}
+            
+            <div>
+                <label class="block text-black font-semibold mb-2">{{ form.title.label }}</label>
+                {{ form.title }}
+                {% if form.title.errors %}
+                    <p class="text-red-600 text-sm mt-1">{{ form.title.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <div>
+                <label class="block text-black font-semibold mb-2">{{ form.content.label }}</label>
+                {{ form.content }}
+                {% if form.content.errors %}
+                    <p class="text-red-600 text-sm mt-1">{{ form.content.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-black font-semibold mb-2">{{ form.mood.label }}</label>
+                    {{ form.mood }}
+                    {% if form.mood.errors %}
+                        <p class="text-red-600 text-sm mt-1">{{ form.mood.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                
+                <div>
+                    <label class="block text-black font-semibold mb-2">{{ form.tags.label }}</label>
+                    {{ form.tags }}
+                    {% if form.tags.errors %}
+                        <p class="text-red-600 text-sm mt-1">{{ form.tags.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div>
+                <label class="block text-black font-semibold mb-2">📷 Фотографии (можно выбрать несколько)</label>
+                <input type="file" name="images" id="id_images" multiple accept="image/*" class="form-input">
+                <p class="text-sm text-gray-600 mt-1">Можно выбрать несколько фотографий одновременно (JPG, PNG, GIF)</p>
+            </div>
+            
+            {% if entry and entry.images.all %}
+            <div>
+                <label class="block text-black font-semibold mb-2">Текущие фотографии:</label>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {% for image in entry.images.all %}
+                    <div class="relative">
+                        <img src="{{ image.image.url }}" alt="Фото" class="w-full h-32 object-cover border-2 border-black rounded-lg">
+                        <a href="{% url 'image_delete' image.pk %}" 
+                           class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
+                           onclick="return confirm('Удалить это фото?')">×</a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            <div class="flex items-center">
+                {{ form.is_favorite }}
+                <label class="ml-2 text-black font-semibold">{{ form.is_favorite.label }}</label>
+            </div>
+            
+            <div class="flex gap-4">
+                <button type="submit" class="flex-1 pink-button py-3 text-xl font-bold text-black">
+                    💾 СОХРАНИТЬ
+                </button>
+                <a href="{% if entry %}{% url 'entry_detail' entry.pk %}{% else %}{% url 'diary' %}{% endif %}" 
+                   class="flex-1 pink-button py-3 text-xl font-bold text-black text-center">
+                    ❌ ОТМЕНА
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MeMind - Личный дневник{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Bangers', sans-serif;
+        }
+        .sky-blue-bg {
+            background-color: #87CEEB;
+        }
+        .pink-button {
+            background-color: #FFC0CB;
+            border: 2px solid #000;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .pink-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            background-color: #FFB6C1;
+        }
+        .outlined-text {
+            -webkit-text-stroke: 2px white;
+            text-stroke: 2px black;
+            color: white;
+        }
+        .form-input {
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 2px solid #000;
+            border-radius: 15px;
+            padding: 12px 20px;
+            font-size: 16px;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #FF69B4;
+            box-shadow: 0 0 0 3px rgba(255, 105, 180, 0.2);
+        }
+        .form-textarea {
+            background-color: rgba(255, 255, 255, 0.95);
+            border: 2px solid #000;
+            border-radius: 15px;
+            padding: 15px 20px;
+            font-size: 16px;
+            width: 100%;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+        .form-textarea:focus {
+            outline: none;
+            border-color: #FF69B4;
+            box-shadow: 0 0 0 3px rgba(255, 105, 180, 0.2);
+        }
+        .form-select {
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 2px solid #000;
+            border-radius: 15px;
+            padding: 12px 20px;
+            font-size: 16px;
+            width: 100%;
+        }
+        .card {
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 2px solid #000;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .wavy-line {
+            height: 4px;
+            background: linear-gradient(90deg, #90EE90 0%, #98FB98 100%);
+            border-radius: 2px;
+            margin: 10px 0;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="sky-blue-bg min-h-screen">
+    {% if user.is_authenticated %}
+    <nav class="bg-white bg-opacity-90 border-b-2 border-black shadow-md">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                <a href="{% url 'diary' %}" class="text-2xl font-bold outlined-text" style="-webkit-text-stroke: 2px black; color: #87CEEB;">
+                    MeMind
+                </a>
+                <div class="flex flex-wrap items-center justify-center gap-2 md:gap-4">
+                    <a href="{% url 'diary' %}" class="pink-button px-3 md:px-4 py-2 text-sm md:text-base text-black font-semibold">Дневник</a>
+                    <a href="{% url 'entry_create' %}" class="pink-button px-3 md:px-4 py-2 text-sm md:text-base text-black font-semibold">Новая запись</a>
+                    <a href="{% url 'profile' %}" class="pink-button px-3 md:px-4 py-2 text-sm md:text-base text-black font-semibold">Профиль</a>
+                    <a href="{% url 'logout' %}" class="pink-button px-3 md:px-4 py-2 text-sm md:text-base text-black font-semibold">Выйти</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    {% endif %}
+
+    {% if messages %}
+    <div class="container mx-auto px-4 mt-4">
+        {% for message in messages %}
+        <div class="bg-white border-2 border-black rounded-lg px-4 py-3 mb-2 shadow-md">
+            <p class="text-black font-semibold">{{ message }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <main class="container mx-auto px-4 py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="mt-auto py-6 text-center">
+        <p class="text-white font-semibold">© 2025 MeMind - Ваш личный дневник</p>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+

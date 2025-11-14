@@ -1,0 +1,152 @@
+{% extends 'diary_app/base.html' %}
+
+{% block title %}Мой дневник - MeMind{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    <!-- Заголовок и статистика -->
+    <div class="mb-8">
+        <h1 class="text-5xl font-bold mb-4 outlined-text" style="-webkit-text-stroke: 3px black; color: white;">
+            МОЙ ДНЕВНИК
+        </h1>
+        <div class="wavy-line w-48 mb-6"></div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="text-center">
+                <p class="text-3xl font-bold text-black">{{ total_entries }}</p>
+                <p class="text-lg text-gray-700">Всего записей</p>
+            </div>
+            <div class="text-center">
+                <p class="text-3xl font-bold text-black">{{ favorite_count }}</p>
+                <p class="text-lg text-gray-700">Избранных</p>
+            </div>
+            <div class="text-center">
+                <p class="text-3xl font-bold text-black">{{ today_entries }}</p>
+                <p class="text-lg text-gray-700">Сегодня</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Фильтры и поиск -->
+    <div class="card mb-6">
+        <form method="get" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <input type="text" name="search" value="{{ search_query }}" 
+                   placeholder="Поиск..." class="form-input">
+            
+            <select name="mood" class="form-select">
+                <option value="">Все настроения</option>
+                <option value="happy" {% if mood_filter == 'happy' %}selected{% endif %}>😊 Счастливый</option>
+                <option value="sad" {% if mood_filter == 'sad' %}selected{% endif %}>😢 Грустный</option>
+                <option value="excited" {% if mood_filter == 'excited' %}selected{% endif %}>🤩 Взволнованный</option>
+                <option value="calm" {% if mood_filter == 'calm' %}selected{% endif %}>😌 Спокойный</option>
+                <option value="anxious" {% if mood_filter == 'anxious' %}selected{% endif %}>😰 Тревожный</option>
+                <option value="grateful" {% if mood_filter == 'grateful' %}selected{% endif %}>🙏 Благодарный</option>
+                <option value="tired" {% if mood_filter == 'tired' %}selected{% endif %}>😴 Усталый</option>
+                <option value="motivated" {% if mood_filter == 'motivated' %}selected{% endif %}>💪 Мотивированный</option>
+            </select>
+            
+            <select name="favorite" class="form-select">
+                <option value="">Все записи</option>
+                <option value="true" {% if favorite_filter == 'true' %}selected{% endif %}>Только избранные</option>
+            </select>
+            
+            <button type="submit" class="pink-button py-2 text-black font-bold">
+                🔍 Найти
+            </button>
+        </form>
+    </div>
+
+    <!-- Кнопка создания новой записи -->
+    <div class="mb-6">
+        <a href="{% url 'entry_create' %}" class="pink-button inline-block px-8 py-4 text-xl font-bold text-black">
+            ✏️ НОВАЯ ЗАПИСЬ
+        </a>
+    </div>
+
+    <!-- Список записей -->
+    {% if entries %}
+    <div class="space-y-4">
+        {% for entry in entries %}
+        <div class="card hover:shadow-lg transition-shadow cursor-pointer" onclick="window.location='{% url 'entry_detail' entry.pk %}'">
+            <div class="flex justify-between items-start mb-3">
+                <div class="flex-1">
+                    <h3 class="text-2xl font-bold text-black mb-2">
+                        {% if entry.title %}
+                            {{ entry.title }}
+                        {% else %}
+                            Запись от {{ entry.created_at|date:"d.m.Y" }}
+                        {% endif %}
+                        {% if entry.is_favorite %}
+                            <span class="text-yellow-500">⭐</span>
+                        {% endif %}
+                    </h3>
+                    <p class="text-gray-600 mb-2">
+                        {{ entry.created_at|date:"d.m.Y в H:i" }}
+                        {% if entry.mood %}
+                            | {{ entry.get_mood_display }}
+                        {% endif %}
+                    </p>
+                    <p class="text-gray-800 line-clamp-3">
+                        {{ entry.content|truncatewords:30 }}
+                    </p>
+                    {% if entry.images.first %}
+                    <div class="mt-3">
+                        <img src="{{ entry.images.first.image.url }}" 
+                             alt="Превью" 
+                             class="w-full h-32 object-cover border-2 border-black rounded-lg">
+                        {% if entry.images.count > 1 %}
+                        <p class="text-sm text-gray-600 mt-1">+ еще {{ entry.images.count|add:"-1" }} фото</p>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    {% if entry.tags %}
+                    <div class="mt-3 flex flex-wrap gap-2">
+                        {% for tag in entry.get_tags_list %}
+                        <span class="bg-pink-200 border border-black rounded-full px-3 py-1 text-sm font-semibold">
+                            #{{ tag }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Пагинация -->
+    {% if page_obj.has_other_pages %}
+    <div class="mt-8 flex justify-center gap-2">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if mood_filter %}&mood={{ mood_filter }}{% endif %}{% if favorite_filter %}&favorite={{ favorite_filter }}{% endif %}" 
+           class="pink-button px-4 py-2 text-black font-bold">
+            ← Назад
+        </a>
+        {% endif %}
+        
+        <span class="px-4 py-2 text-black font-semibold">
+            Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+        </span>
+        
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if mood_filter %}&mood={{ mood_filter }}{% endif %}{% if favorite_filter %}&favorite={{ favorite_filter }}{% endif %}" 
+           class="pink-button px-4 py-2 text-black font-bold">
+            Вперед →
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+    
+    {% else %}
+    <div class="card text-center py-12">
+        <p class="text-3xl mb-4">📔</p>
+        <p class="text-2xl font-bold text-black mb-4">Пока нет записей</p>
+        <p class="text-lg text-gray-700 mb-6">Начните вести свой дневник прямо сейчас!</p>
+        <a href="{% url 'entry_create' %}" class="pink-button inline-block px-8 py-4 text-xl font-bold text-black">
+            Создать первую запись
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+

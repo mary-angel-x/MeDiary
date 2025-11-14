@@ -1,0 +1,96 @@
+{% extends 'diary_app/base.html' %}
+
+{% block title %}Запись - MeMind{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="card">
+        <div class="flex justify-between items-start mb-6">
+            <div>
+                <h1 class="text-4xl font-bold mb-2 outlined-text" style="-webkit-text-stroke: 2px black; color: #87CEEB;">
+                    {% if entry.title %}
+                        {{ entry.title }}
+                    {% else %}
+                        Запись от {{ entry.created_at|date:"d.m.Y" }}
+                    {% endif %}
+                </h1>
+                <p class="text-gray-600 text-lg">
+                    {{ entry.created_at|date:"d.m.Y в H:i" }}
+                    {% if entry.updated_at != entry.created_at %}
+                        (обновлено: {{ entry.updated_at|date:"d.m.Y в H:i" }})
+                    {% endif %}
+                </p>
+            </div>
+            <div class="flex gap-2">
+                <a href="{% url 'entry_toggle_favorite' entry.pk %}" 
+                   class="pink-button px-4 py-2 text-2xl">
+                    {% if entry.is_favorite %}⭐{% else %}☆{% endif %}
+                </a>
+            </div>
+        </div>
+        
+        {% if entry.mood %}
+        <div class="mb-4">
+            <span class="bg-pink-200 border-2 border-black rounded-full px-4 py-2 text-lg font-semibold">
+                {{ entry.get_mood_display }}
+            </span>
+        </div>
+        {% endif %}
+        
+        {% if entry.tags %}
+        <div class="mb-6 flex flex-wrap gap-2">
+            {% for tag in entry.get_tags_list %}
+            <span class="bg-pink-200 border border-black rounded-full px-3 py-1 text-sm font-semibold">
+                #{{ tag }}
+            </span>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <div class="prose max-w-none">
+            <p class="text-lg text-gray-800 whitespace-pre-wrap leading-relaxed">
+                {{ entry.content }}
+            </p>
+        </div>
+        
+        {% if images %}
+        <div class="mt-8">
+            <h3 class="text-2xl font-bold text-black mb-4">📷 Фотографии</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {% for image in images %}
+                <div class="relative group">
+                    <img src="{{ image.image.url }}" 
+                         alt="{% if image.caption %}{{ image.caption }}{% else %}Фото к записи{% endif %}" 
+                         class="w-full h-64 object-cover border-2 border-black rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
+                         onclick="window.open('{{ image.image.url }}', '_blank')">
+                    {% if image.caption %}
+                    <p class="mt-2 text-sm text-gray-700 text-center">{{ image.caption }}</p>
+                    {% endif %}
+                    <a href="{% url 'image_delete' image.pk %}" 
+                       class="absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-lg hover:bg-red-600 opacity-0 group-hover:opacity-100 transition-opacity"
+                       onclick="return confirm('Удалить это фото?')"
+                       title="Удалить фото">×</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        
+        <div class="mt-8 flex gap-4">
+            <a href="{% url 'entry_edit' entry.pk %}" 
+               class="flex-1 pink-button py-3 text-xl font-bold text-black text-center">
+                ✏️ РЕДАКТИРОВАТЬ
+            </a>
+            <a href="{% url 'entry_delete' entry.pk %}" 
+               class="flex-1 pink-button py-3 text-xl font-bold text-black text-center bg-red-200 hover:bg-red-300">
+                🗑️ УДАЛИТЬ
+            </a>
+            <a href="{% url 'diary' %}" 
+               class="flex-1 pink-button py-3 text-xl font-bold text-black text-center">
+                ← НАЗАД
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
